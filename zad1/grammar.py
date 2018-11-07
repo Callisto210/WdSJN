@@ -56,7 +56,4 @@ parser = yacc.yacc()
 def parse(expression):
     result = parser.parse(expression)
     print(result)
-
-
-data = '''3 dodać 5 podzielić przez otwórz nawias 4 razy 3 zamknij nawias pomnóż przez 9 minus sinus 90 plus 45'''
-parse(data)
+    return result
