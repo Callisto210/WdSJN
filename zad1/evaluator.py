@@ -1,10 +1,19 @@
-from collections import defaultdict
+class NumeralsNormalizer:
 
-from grammar import parse
+    def __init__(self, filename):
+        self._numerals = {}
+        with open(filename) as file:
+            for line in file:
+                forms = line.split(";")
+                self._numerals[forms[1]] = forms[0]
+
+    def normalize_numerals(self, text):
+        return " ".join([self._numerals.get(x, x) for x in text.split()])
 
 
-def numerals_to_number(numerals, numwords={}):
-    if not numwords:
+class NumeralsTransformer:
+
+    def __init__(self, normalizer):
         units = [
             "zero", "jeden", "dwa", "trzy", "cztery", "pięć", "sześć", "siedem", "osiem",
             "dziewięć", "dziesięć", "jedenaście", "dwanaście", "trzynaście", "czternaście", "piętnaście",
@@ -21,68 +30,64 @@ def numerals_to_number(numerals, numwords={}):
             "siedemset", "osiemset", "dziewięćset"
         ]
 
-        scales = ["tysiąc", "milion", "miliard", "bilion"]
+        scales = ["tysiąc", "milion", "miliard", "bilion", "biliard"]
+
+        self._numwords = {}
 
         for idx, word in enumerate(units):
-            numwords[word] = (1, idx)
+            self._numwords[word] = (1, idx)
         for idx, word in enumerate(tens):
-            numwords[word] = (1, idx * 10)
+            self._numwords[word] = (1, idx * 10)
         for idx, word in enumerate(hundreds):
-            numwords[word] = (1, idx * 100)
+            self._numwords[word] = (1, idx * 100)
         for idx, word in enumerate(scales):
-            numwords[word] = (10 ** (idx * 3 + 3), 0)
+            self._numwords[word] = (10 ** (idx * 3 + 3), 0)
 
-    current = result = 0
-    for word in numerals:
-        if word not in numwords:
-            raise Exception("Illegal word: " + word)
+        self._numerals_set = set(units) | set(tens) | set(hundreds) | set(scales)
+        self._normalizer = normalizer
 
-        scale, increment = numwords[word]
-        current = current * scale + increment
-        if scale > 100:
-            result += current
-            current = 0
+    def _transform_to_number(self, numerals):
+        current = result = 0
+        for word in numerals:
+            if word not in self._numwords:
+                raise Exception("Illegal word: " + word)
 
-    return result + current
+            scale, increment = self._numwords[word]
+            current = current * scale + increment
+            if scale > 100:
+                result += current
+                current = 0
 
+        return result + current
 
-def normalize_numerals(textnum, d=defaultdict(list)):
-    if not d:
-        with open("numerals.txt") as file:
-            for line in file:
-                forms = line.split(";")
-                d[forms[1]].append(forms[0])
-
-    normalized = [d.get(x, [x])[0] for x in textnum.split()]
-    return " ".join(normalized)
-
-
-def replace_numerals_with_numbers(text, numerals_list=[]):
-    if not numerals_list:
-        with open("numerals.txt") as file:
-            for line in file:
-                z = line.split(";")
-                numerals_list.append(z[0])
-
-    res = []
-    numerals = []
-    for word in text.split():
-        if word in numerals_list:
-            numerals.append(word)
-        else:
-            if numerals:
-                res.append(numerals_to_number(numerals))
-            res.append(word)
-            numerals = []
-    if numerals:
-        res.append(numerals_to_number(numerals))
-    return " ".join([str(r) for r in res])
+    def replace_with_numbers(self, text):
+        normalized_text = normalizer.normalize_numerals(text)
+        result = []
+        numerals = []
+        for word in normalized_text.split():
+            if word in self._numerals_set:
+                numerals.append(word)
+            else:
+                if numerals:
+                    result.append(self._transform_to_number(numerals))
+                result.append(word)
+                numerals = []
+        if numerals:
+            result.append(self._transform_to_number(numerals))
+        return " ".join([str(r) for r in result])
 
 
-data = ('''osiemset trzy miliony dwieście osiemdziesiąt trzy tysiące dziewięćdziesiąt trzy dodać pięć '''
-        '''podzielić przez otwórz nawias cztery razy trzy zamknij nawias '''
-        '''pomnóż przez dziewięć minus sinus dziewięćdziesięciu ośmiu plus czterdzieści pięć''')
+if __name__ == "__main__":
+    from grammar import parse
+    from math import *
 
-result = parse(replace_numerals_with_numbers(normalize_numerals(data)))
-from math import *
-print(eval(result))
+    data = ('''osiemset trzy miliony dwieście osiemdziesiąt sześć tysięcy dziewięćdziesiąt jeden dodać siedem '''
+            '''podzielić przez otwórz nawias cztery razy trzy zamknij nawias '''
+            '''pomnóż przez dziewięć minus sinus dziewięćdziesięciu ośmiu plus czterdzieści pięć''')
+
+    normalizer = NumeralsNormalizer("numerals.txt")
+    transformer = NumeralsTransformer(normalizer)
+
+    result = parse(transformer.replace_with_numbers(data))
+
+    print(eval(result))
