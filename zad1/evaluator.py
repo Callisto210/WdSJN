@@ -81,9 +81,9 @@ if __name__ == "__main__":
     from grammar import parse
     from math import *
 
-    data = ('''osiemset trzy miliony dwieście osiemdziesiąt sześć tysięcy dziewięćdziesiąt jeden dodać siedem '''
-            '''podzielić przez otwórz nawias cztery razy trzy zamknij nawias '''
-            '''pomnóż przez dziewięć minus sinus dziewięćdziesięciu ośmiu plus czterdzieści pięć''')
+    data = ('''minus otwórz nawias osiemset trzy miliony dwieście osiemdziesiąt sześć tysięcy dziewięćdziesiąt jeden dodać siedem zamknij nawias'''
+            '''podzielić przez otwórz nawias minus cztery razy minus trzy zamknij nawias '''
+            '''pomnóż przez dziewięć minus sinus dziewięćdziesięciu ośmiu plus minus minus czterdzieści pięć''')
 
     normalizer = NumeralsNormalizer("numerals.txt")
     transformer = NumeralsTransformer(normalizer)

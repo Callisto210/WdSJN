@@ -42,6 +42,14 @@ def p_factor_num(p):
     'factor : NUMBER'
     p[0] = str(p[1])
 
+def p_factor_minus_unary(p):
+    'factor : MINUS factor'
+    p[0] = '-' + str(p[2])
+
+def p_factor_plus_unary(p):
+    'factor : PLUS factor'
+    p[0] = '+' + str(p[2])
+
 def p_factor_expr(p):
     'factor : LPAREN expression RPAREN'
     p[0] = '( ' + str(p[2]) + ' )'
