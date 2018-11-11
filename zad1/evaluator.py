@@ -61,7 +61,7 @@ class NumeralsTransformer:
         return result + current
 
     def replace_with_numbers(self, text):
-        normalized_text = normalizer.normalize_numerals(text)
+        normalized_text = self._normalizer.normalize_numerals(text)
         result = []
         numerals = []
         for word in normalized_text.split():
@@ -75,19 +75,3 @@ class NumeralsTransformer:
         if numerals:
             result.append(self._transform_to_number(numerals))
         return " ".join([str(r) for r in result])
-
-
-if __name__ == "__main__":
-    from grammar import parse
-    from math import *
-
-    data = ('''minus otwórz nawias osiemset trzy miliony dwieście osiemdziesiąt sześć tysięcy dziewięćdziesiąt jeden dodać siedem zamknij nawias'''
-            '''podzielić przez otwórz nawias minus cztery razy minus trzy zamknij nawias '''
-            '''pomnóż przez dziewięć minus sinus cosinus dziewięćdziesięciu ośmiu minus sinus jeden razy cosinus jeden plus minus otwórz nawias minus czterdzieści pięć zamknij nawias do potęgi dwa do potęgi minus dwa''')
-
-    normalizer = NumeralsNormalizer("numerals.txt")
-    transformer = NumeralsTransformer(normalizer)
-
-    result = parse(transformer.replace_with_numbers(data))
-
-    print(eval(result))
