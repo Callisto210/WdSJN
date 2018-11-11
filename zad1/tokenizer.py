@@ -11,6 +11,7 @@ tokens = (
    'RPAREN',
    'SIN',
    'COS',
+   'RAISE_TO_POWER',
 )
 
 # Regular expression rules for simple tokens
@@ -22,6 +23,7 @@ t_LPAREN  = r'otwórz\snawias'
 t_RPAREN  = r'zamknij\snawias'
 t_SIN     = r'sinus'
 t_COS     = r'cosinus'
+t_RAISE_TO_POWER = r'do\spotęgi'
 
 # A regular expression rule with some action code
 def t_NUMBER(t):
@@ -42,13 +44,3 @@ def t_error(t):
 
 # Build the lexer
 lexer = lex.lex()
-
-##Q&D aka Quick and Dirty test
-#data = '''3 dodać 5 podzielić przez otwórz nawias 4 razy 3 zamknij nawias pomnóż przez 9 minus 8'''
-#lexer.input(data)
-
-#while True:
-#    tok = lexer.token()
-#    if not tok:
-#        break
-#    print(tok)
