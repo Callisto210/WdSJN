@@ -24,15 +24,7 @@ t_RPAREN  = r'zamknij\snawias'
 t_SIN     = r'sinus'
 t_COS     = r'cosinus'
 t_RAISE_TO_POWER = r'do\spotęgi'
-
-# A regular expression rule with some action code
-def t_NUMBER(t):
-    r'\d+'
-    t.value = int(t.value)    
-    return t
-##
-##^^^^Tutaj trzeba będzie zrobic rozpoznawanie liczb
-##
+t_NUMBER = r'(\d+(\.\d+)?)|e|pi'
 
 # A string containing ignored characters (spaces and tabs)
 t_ignore  = ' \t\n'
