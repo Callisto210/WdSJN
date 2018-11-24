@@ -1,3 +1,5 @@
+import re
+
 class NumeralsNormalizer:
 
     def __init__(self, filename):
@@ -60,6 +62,10 @@ class NumeralsTransformer:
 
         return result + current
 
+    @staticmethod
+    def _handle_floats(text):
+        return re.sub(r'(\d+)\s+(przecinek|kropka|koma)\s+(\d+)', r'\1.\3', text)
+
     def replace_with_numbers(self, text):
         normalized_text = self._normalizer.normalize_numerals(text)
         result = []
@@ -74,4 +80,5 @@ class NumeralsTransformer:
                 numerals = []
         if numerals:
             result.append(self._transform_to_number(numerals))
-        return " ".join([str(r) for r in result])
+        result = [str(r) for r in result]
+        return self._handle_floats(" ".join(result))
