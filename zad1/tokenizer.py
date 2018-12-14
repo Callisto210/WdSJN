@@ -15,10 +15,10 @@ tokens = (
 )
 
 # Regular expression rules for simple tokens
-t_PLUS    = r'dodaj|dodać|plus'
-t_MINUS   = r'odejmij|odjąć|minus'
-t_TIMES   = r'razy|pomnóż\sprzez'
-t_DIVIDE  = r'podzielić\sprzez'
+t_PLUS    = r'\+|dodaj|dodać|plus'
+t_MINUS   = r'-|odejmij|odjąć|minus'
+t_TIMES   = r'x|\*|razy|pomnóż\sprzez'
+t_DIVIDE  = r'/|podzielić\sprzez|podzielone\sprzez'
 t_LPAREN  = r'otwórz\snawias'
 t_RPAREN  = r'zamknij\snawias'
 t_SIN     = r'sinus'
