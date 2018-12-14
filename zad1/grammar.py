@@ -22,6 +22,10 @@ def p_term_div(p):
     'term : term DIVIDE pow'
     p[0] = str(p[1]) + ' / ' + str(p[3])
 
+def p_term_modulo(p):
+    'term : term MODULO pow'
+    p[0] = str(p[1]) + ' % ' + str(p[3])
+
 def p_term_unary(p):
     'term : pow'
     p[0] = p[1]
@@ -41,6 +45,14 @@ def p_factor_sin(p):
 def p_factor_cos(p):
     'factor : COS factor'
     p[0] = 'cos(' + str(p[2]) + ')'
+
+def p_factor_factorial(p):
+    'factor : FACTORIAL factor'
+    p[0] = 'factorial(' + str(p[2]) + ')'
+
+def p_factor_sqrt(p):
+    'factor : SQRT factor'
+    p[0] = 'sqrt(' + str(p[2]) + ')'
 
 def p_factor_minus_unary(p):
     'factor : MINUS factor'
