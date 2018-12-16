@@ -1,4 +1,7 @@
+import os
 import pdb
+import csv
+import pprint
 
 def initialize(graph, source):
     d = {} # Stands for destination
@@ -11,10 +14,13 @@ def initialize(graph, source):
 
 def relax(node, neighbour, graph, d, p):
     # If the distance between the node and the neighbour is lower than the one I have now
-    if d[neighbour] > d[node] + graph[node][neighbour]:
-        # Record this lower distance
-        d[neighbour]  = d[node] + graph[node][neighbour]
-        p[neighbour] = node
+    try:
+        if d[neighbour] > d[node] + graph[node][neighbour]:
+            # Record this lower distance
+            d[neighbour]  = d[node] + graph[node][neighbour]
+            p[neighbour] = node
+    except KeyError:
+        pass
 
 def bellman_ford(graph, source):
     d, p = initialize(graph, source)
@@ -34,7 +40,7 @@ def bellman_ford(graph, source):
 def test():
     graph = {
         'a': {'b': -1, 'c':  4},
-        'b': {'c':  3, 'd':  2, 'e':  2},
+        'b': {'c':  3, 'd':  2},
         'c': {},
         'd': {'b':  1, 'c':  5},
         'e': {'d': -3}
@@ -43,4 +49,21 @@ def test():
     d, p = bellman_ford(graph, 'a')
     print(d)
 
-if __name__ == '__main__': test()
+def main():
+    data = {}
+    pp = pprint.PrettyPrinter()
+    #Load all csv files
+    for f in os.listdir(os.curdir):
+        if f.endswith(".csv"):
+            data[f[:-4]] = {}
+            with open(f) as csv_file:
+                csv_reader = csv.reader(csv_file, delimiter=',')
+                for row in csv_reader:
+                    #print(f + " -> " + str(row[0]))
+                    data[f[:-4]][row[1]] = row[0]
+    pp.pprint(data)
+    test()
+    d, p = bellman_ford(data, 'kobieta')
+    print(d)
+
+if __name__ == '__main__': main()
