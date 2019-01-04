@@ -11,5 +11,8 @@ if __name__ == "__main__":
 
     for example in examples:
         print(example)
-        result = parse(transformer.replace_with_numbers(example))
-        print(str(eval(result)) + "\n")
+        result = parse(transformer.replace_with_numbers(example.lower()))
+        try:
+            print(str(eval(result)) + "\n")
+        except:
+            pass
