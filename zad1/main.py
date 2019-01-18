@@ -7,12 +7,11 @@ if __name__ == "__main__":
     transformer = NumeralsTransformer(normalizer)
 
     with open("examples.txt") as f:
-        examples = f.readlines()
-
-    for example in examples:
-        print(example)
-        result = parse(transformer.replace_with_numbers(example.lower()))
-        try:
-            print(str(eval(result)) + "\n")
-        except:
-            pass
+        for example in f:
+            print("example: " + example.rstrip())
+            result = parse(transformer.replace_with_numbers(example.lower()))
+            print("parsed: " + result)
+            try:
+                print("result: " + str(eval(result)) + "\n")
+            except:
+                pass

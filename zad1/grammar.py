@@ -79,5 +79,4 @@ parser = yacc.yacc()
 
 def parse(expression):
     result = parser.parse(expression)
-    print(result)
     return result
